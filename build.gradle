@@ -51,11 +51,14 @@ allprojects {
 
   configurations {
     testArtifacts.extendsFrom testRuntime
+    // configuration that holds jars to include in the jar
+    extraLibs
   }
 
   dependencies {
     runtime files(Jvm.current().toolsJar)
     compile group: 'de.unisb.cs.st', name: 'sequitur', version: '1.0'
+    extraLibs group: 'de.unisb.cs.st', name: 'sequitur', version: '1.0'
   }
 
   sourceSets {
