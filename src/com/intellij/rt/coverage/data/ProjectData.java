@@ -16,7 +16,10 @@
 
 package com.intellij.rt.coverage.data;
 
+import com.intellij.rt.coverage.traces.ExecutionTraceCollector;
 import com.intellij.rt.coverage.util.ErrorReporter;
+import de.hammacher.util.Pair;
+import de.unisb.cs.st.sequitur.output.OutputSequence;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +28,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 
 public class ProjectData implements CoverageData, Serializable {
   public static final String PROJECT_DATA_OWNER = "com/intellij/rt/coverage/data/ProjectData";
@@ -237,6 +241,10 @@ public class ProjectData implements CoverageData, Serializable {
   public static void touchLine(Object classData, int line) {
     if (ourProjectData != null) {
       ((ClassData) classData).touchLine(line);
+      // TODO only for testing purposes
+      System.out.println(((ClassData) classData).getName() + ": " + line);
+      // collects execution trace based on the current active thread
+      ExecutionTraceCollector.addLineToExecutionTrace((ClassData) classData, line);
       return;
     }
     touch(TOUCH_LINE_METHOD,

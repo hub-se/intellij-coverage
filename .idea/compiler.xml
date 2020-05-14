@@ -12,10 +12,32 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <bytecodeTargetLevel>
+      <module name="buildSrc-intellij-coverage_buildSrc_main" target="1.8" />
+      <module name="buildSrc-intellij-coverage_buildSrc_test" target="1.8" />
       <module name="buildSrc_main" target="1.8" />
       <module name="buildSrc_test" target="1.8" />
+      <module name="git-intellij-coverage" target="1.5" />
+      <module name="git-intellij-coverage_buildSrc" target="1.8" />
+      <module name="git-intellij-coverage_main" target="1.5" />
+      <module name="git-intellij-coverage_test" target="1.5" />
       <module name="instrumentation_main" target="1.6" />
       <module name="instrumentation_test" target="1.6" />
+      <module name="intellij-coverage-instrumentation" target="1.5" />
+      <module name="intellij-coverage-instrumentation_main" target="1.5" />
+      <module name="intellij-coverage-instrumentation_test" target="1.5" />
+      <module name="intellij-coverage-junit4-test-discovery-launcher" target="1.5" />
+      <module name="intellij-coverage-junit4-test-discovery-launcher_main" target="1.5" />
+      <module name="intellij-coverage-junit4-test-discovery-launcher_test" target="1.5" />
+      <module name="intellij-coverage-test-discovery" target="1.5" />
+      <module name="intellij-coverage-test-discovery_jmh" target="1.5" />
+      <module name="intellij-coverage-test-discovery_main" target="1.5" />
+      <module name="intellij-coverage-test-discovery_test" target="1.5" />
+      <module name="intellij-coverage-tests" target="1.5" />
+      <module name="intellij-coverage-tests_main" target="1.5" />
+      <module name="intellij-coverage-tests_test" target="1.5" />
+      <module name="intellij-coverage-util" target="1.5" />
+      <module name="intellij-coverage-util_main" target="1.5" />
+      <module name="intellij-coverage-util_test" target="1.5" />
       <module name="intellij-coverage_buildSrc_main" target="1.8" />
       <module name="intellij-coverage_buildSrc_test" target="1.8" />
       <module name="intellij-coverage_main" target="1.6" />
