@@ -103,9 +103,9 @@ public class SaveHook implements Runnable {
   }
 
   private void saveObject(Object o, String outputPath) {
-    FileOutputStream osTrace = null;
+    FileOutputStream fout = null;
     try {
-      FileOutputStream fout = new FileOutputStream(outputPath);
+      fout = new FileOutputStream(outputPath);
       BufferedOutputStream buffer = new BufferedOutputStream(fout);
       ObjectOutputStream oos = new ObjectOutputStream(buffer);
       oos.writeObject(o);
@@ -114,7 +114,9 @@ public class SaveHook implements Runnable {
       ErrorReporter.reportError("Error writing file " + outputPath, e);
     } finally {
       try {
-        osTrace.close();
+        if (fout != null) {
+          fout.close();
+        }
       } catch (IOException e) {
         ErrorReporter.reportError("Error writing file " + outputPath, e);
       }
