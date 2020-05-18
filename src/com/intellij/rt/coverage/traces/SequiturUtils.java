@@ -1,6 +1,5 @@
 package com.intellij.rt.coverage.traces;
 
-import com.sun.istack.internal.Nullable;
 import de.unisb.cs.st.sequitur.input.InputSequence;
 import de.unisb.cs.st.sequitur.input.SharedInputGrammar;
 import de.unisb.cs.st.sequitur.output.OutputSequence;
@@ -25,7 +24,7 @@ public class SequiturUtils {
    * @throws ClassNotFoundException if a class can't be found
    */
   public static <T> InputSequence<T> getInputSequenceFromByteArray(
-      byte[] bytes, @Nullable SharedInputGrammar<T> inGrammar, Class<T> clazz)
+      byte[] bytes, SharedInputGrammar<T> inGrammar, Class<T> clazz)
       throws IOException, ClassNotFoundException {
     ByteArrayInputStream byteIn = new ByteArrayInputStream(bytes);
     InputStream buffer = new BufferedInputStream(byteIn);
@@ -164,7 +163,7 @@ public class SequiturUtils {
    * @throws ClassNotFoundException if a class can't be found
    */
   public static <T> InputSequence<T> convertToInputSequence(
-      OutputSequence<T> outSeq, @Nullable SharedInputGrammar<T> inputGrammar, Class<T> clazz)
+      OutputSequence<T> outSeq, SharedInputGrammar<T> inputGrammar, Class<T> clazz)
       throws IOException, ClassNotFoundException {
     if (inputGrammar == null) {
       return getInputSequenceFromByteArray(convertToByteArray(outSeq, true), null, clazz);
