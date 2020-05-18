@@ -19,9 +19,7 @@ package com.intellij.rt.coverage.traces;
 import com.intellij.rt.coverage.data.ClassData;
 import de.unisb.cs.st.sequitur.output.OutputSequence;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -48,23 +46,22 @@ public class ExecutionTraceCollector {
     globalExecutionTraceCollectorLock.lock();
     try {
       processAllRemainingSubTraces();
+
+      // reset map for next run
+      Map<Long, OutputSequence<Long>> temp = executionTraces;
+      executionTraces = new HashMap<Long, OutputSequence<Long>>();
+
       Map<Long, byte[]> traces = new HashMap<Long, byte[]>();
-      for (Map.Entry<Long, OutputSequence<Long>> entry : executionTraces.entrySet()) {
-        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-        ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
-        entry.getValue().writeOut(objOut, true);
-        objOut.close();
-        byte[] bytes = byteOut.toByteArray();
+      for (Map.Entry<Long, OutputSequence<Long>> entry : temp.entrySet()) {
+        byte[] bytes = SequiturUtils.convertToByteArray(entry.getValue(), true);
 
         traces.put(entry.getKey(), bytes);
-
       }
       return traces;
     } catch (IOException e) {
       e.printStackTrace();
       return null;
     } finally {
-      executionTraces.clear();
       globalExecutionTraceCollectorLock.unlock();
     }
   }
