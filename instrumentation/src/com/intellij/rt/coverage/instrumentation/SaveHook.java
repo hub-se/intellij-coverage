@@ -58,21 +58,20 @@ public class SaveHook implements Runnable {
   public void save(ProjectData projectData) {
     System.out.println("saving");
 
-    try {
-      Map<Long, byte[]> map = ExecutionTraceCollector.getAndResetExecutionTraces();
-      FileOutputStream fout = new FileOutputStream(myDataFile.getParent()+"traces.ser");
-      ObjectOutputStream oos = new ObjectOutputStream(fout);
-      oos.writeObject(map);
-      oos.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
     projectData.stop();
     try {
       if (myAppendUnloaded) {
         appendUnloaded(projectData);
       }
+
+      // store execution traces
+      String traceMapPath = myDataFile.getParent() + ExecutionTraceCollector.TRACE_FILE_NAME;
+      Map<Long, byte[]> map = ExecutionTraceCollector.getAndResetExecutionTraces();
+      saveObject(map, traceMapPath);
+
+      // store (id -> class name) map
+      String classNameMapPath = myDataFile.getParent() + ClassLineEncoding.ID_TO_CLASS_NAME_MAP_NAME;
+      saveObject(ClassLineEncoding.idToClassNameMap, classNameMapPath);
 
       DataOutputStream os = null;
       try {
@@ -100,6 +99,25 @@ public class SaveHook implements Runnable {
       ErrorReporter.reportError("Out of memory error occurred, try to increase memory available for the JVM, or make include / exclude patterns more specific", e);
     } catch (Throwable e) {
       ErrorReporter.reportError("Unexpected error", e);
+    }
+  }
+
+  private void saveObject(Object o, String outputPath) {
+    FileOutputStream osTrace = null;
+    try {
+      FileOutputStream fout = new FileOutputStream(outputPath);
+      BufferedOutputStream buffer = new BufferedOutputStream(fout);
+      ObjectOutputStream oos = new ObjectOutputStream(buffer);
+      oos.writeObject(o);
+      oos.flush();
+    } catch (IOException e) {
+      ErrorReporter.reportError("Error writing file " + outputPath, e);
+    } finally {
+      try {
+        osTrace.close();
+      } catch (IOException e) {
+        ErrorReporter.reportError("Error writing file " + outputPath, e);
+      }
     }
   }
 

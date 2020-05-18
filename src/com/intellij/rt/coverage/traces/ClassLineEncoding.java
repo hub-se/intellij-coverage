@@ -24,13 +24,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClassLineEncoding {
 
+  public static final String ID_TO_CLASS_NAME_MAP_NAME = "idToClassMap.ser";
+
   // TODO these maps need to be either provided by the IDE executing the agent OR
   //  need to be provided to the executing IDE in the end; we don't want to store Strings or Objects in the trace.
 
   // maps class data to respecive integer ID
   public static Map<ClassData, Integer> classDataToIdMap = new HashMap<ClassData, Integer>();
-  // maps integer ID to respective class data
-  public static Map<Integer, ClassData> idToClassDataMap = new HashMap<Integer, ClassData>();
+  // maps integer ID to respective class names
+  public static Map<Integer, String> idToClassNameMap = new HashMap<Integer, String>();
   // current class data ID
   private static AtomicInteger currentId = new AtomicInteger(0);
 
@@ -44,7 +46,7 @@ public class ClassLineEncoding {
     if (id == null) {
       id = currentId.getAndIncrement();
       classDataToIdMap.put(classData, id);
-      idToClassDataMap.put(id, classData);
+      idToClassNameMap.put(id, classData.getName());
     }
     // 32 bits class id | 32 bits line number
     return ((long)id << INTEGER_BITS) | line;
@@ -66,11 +68,12 @@ public class ClassLineEncoding {
 
   /**
    * @param encodedStatement an encoded line reference
-   * @return the class data coverage object
+   * @param idToClassNameMap a list that maps IDs to class names
+   * @return the respective class name; or null if no map entry is found
    */
-  public static ClassData getClassData(long encodedStatement) {
+  public static String getClassName(long encodedStatement, Map<Integer, String> idToClassNameMap) {
     // TODO actually, this should probably return either the class name or the respective PSI class
-    return idToClassDataMap.get(getClassId(encodedStatement));
+    return idToClassNameMap.get(getClassId(encodedStatement));
   }
 
   /**

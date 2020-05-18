@@ -29,6 +29,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ExecutionTraceCollector {
 
+  public static final String TRACE_FILE_NAME = "traces.ser";
+
   private static final transient Lock globalExecutionTraceCollectorLock = new ReentrantLock();
 
   // shouldn't need to be thread-safe, as each thread only accesses its own trace (thread id -> sequence of sub trace ids)
