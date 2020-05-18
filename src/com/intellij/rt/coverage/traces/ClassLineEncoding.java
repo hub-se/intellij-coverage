@@ -24,8 +24,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClassLineEncoding {
 
-  public static final String ID_TO_CLASS_NAME_MAP_NAME = "idToClassMap.ser";
-
   // TODO these maps need to be either provided by the IDE executing the agent OR
   //  need to be provided to the executing IDE in the end; we don't want to store Strings or Objects in the trace.
 

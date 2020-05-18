@@ -22,6 +22,7 @@ import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.rt.coverage.traces.ClassLineEncoding;
 import com.intellij.rt.coverage.traces.ExecutionTraceCollector;
+import com.intellij.rt.coverage.traces.FileUtils;
 import com.intellij.rt.coverage.util.*;
 import com.intellij.rt.coverage.util.classFinder.ClassEntry;
 import com.intellij.rt.coverage.util.classFinder.ClassFinder;
@@ -31,7 +32,6 @@ import org.jetbrains.coverage.gnu.trove.TObjectIntHashMap;
 import org.jetbrains.coverage.org.objectweb.asm.ClassReader;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 /**
@@ -64,14 +64,11 @@ public class SaveHook implements Runnable {
         appendUnloaded(projectData);
       }
 
-      // store execution traces
-      String traceMapPath = myDataFile.getParent() + ExecutionTraceCollector.TRACE_FILE_NAME;
-      Map<Long, byte[]> map = ExecutionTraceCollector.getAndResetExecutionTraces();
-      saveObject(map, traceMapPath);
-
-      // store (id -> class name) map
-      String classNameMapPath = myDataFile.getParent() + ClassLineEncoding.ID_TO_CLASS_NAME_MAP_NAME;
-      saveObject(ClassLineEncoding.idToClassNameMap, classNameMapPath);
+      // store execution traces and (id -> class name) map
+      Map<Long, byte[]> traces = ExecutionTraceCollector.getAndResetExecutionTraces();
+      saveObjects(myDataFile, ExecutionTraceCollector.TRACE_FILE_ID,
+          traces,
+          ClassLineEncoding.idToClassNameMap);
 
       DataOutputStream os = null;
       try {
@@ -101,14 +98,17 @@ public class SaveHook implements Runnable {
       ErrorReporter.reportError("Unexpected error", e);
     }
   }
-
-  private void saveObject(Object o, String outputPath) {
+  
+  private void saveObjects(File myDataFile, String uniqueId, Object... objects) {
+    String outputPath = FileUtils.getFilePathUniqueToSessionFile(myDataFile, uniqueId);
     FileOutputStream fout = null;
     try {
       fout = new FileOutputStream(outputPath);
       BufferedOutputStream buffer = new BufferedOutputStream(fout);
       ObjectOutputStream oos = new ObjectOutputStream(buffer);
-      oos.writeObject(o);
+      for (Object o : objects) {
+        oos.writeObject(o);
+      }
       oos.flush();
     } catch (IOException e) {
       ErrorReporter.reportError("Error writing file " + outputPath, e);

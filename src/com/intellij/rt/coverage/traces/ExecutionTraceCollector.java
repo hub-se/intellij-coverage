@@ -19,6 +19,7 @@ package com.intellij.rt.coverage.traces;
 import com.intellij.rt.coverage.data.ClassData;
 import de.unisb.cs.st.sequitur.output.OutputSequence;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ExecutionTraceCollector {
 
-  public static final String TRACE_FILE_NAME = "traces.ser";
+  /**
+   * used for generating file names (see {@link FileUtils#getFilePathUniqueToSessionFile(File, String)})
+    */
+  public static final String TRACE_FILE_ID = "traces";
 
   private static final transient Lock globalExecutionTraceCollectorLock = new ReentrantLock();
 
