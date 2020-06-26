@@ -79,25 +79,28 @@ public class ExecutionTraceCollector {
       if (thread.equals(Thread.currentThread())) {
         continue;
       }
-      boolean done = false;
-      while (!done) {
-        if (thread.isAlive()) {
-          System.err.println("Thread " + thread.getId() + " is still alive. Waiting 10 seconds for it to die...");
-          try {
-            thread.join(10000); // wait 10 seconds for threads to die... TODO
-            if (thread.isAlive()) {
-              System.err.println("(At least) thread " + thread.getId() + " remains alive...");
-              //						thread.interrupt();
-              break;
-            }
-            done = true;
-          } catch (InterruptedException e) {
-            // try again
-          }
-        } else {
-          break;
-        }
+      if (thread.isAlive()) {
+        System.err.println("Thread " + thread.getId() + " is still alive.");
       }
+//      boolean done = false;
+//      while (!done) {
+//        if (thread.isAlive()) {
+//          System.err.println("Thread " + thread.getId() + " is still alive. Waiting 10 seconds for it to die...");
+//          try {
+//            thread.join(10000); // wait 10 seconds for threads to die... TODO
+//            if (thread.isAlive()) {
+//              System.err.println("(At least) thread " + thread.getId() + " remains alive...");
+//              //						thread.interrupt();
+//              break;
+//            }
+//            done = true;
+//          } catch (InterruptedException e) {
+//            // try again
+//          }
+//        } else {
+//          break;
+//        }
+//      }
     }
 
     currentThreads.clear();

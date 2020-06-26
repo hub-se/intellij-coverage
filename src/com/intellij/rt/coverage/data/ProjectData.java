@@ -241,8 +241,6 @@ public class ProjectData implements CoverageData, Serializable {
   public static void touchLine(Object classData, int line) {
     if (ourProjectData != null) {
       ((ClassData) classData).touchLine(line);
-      // TODO only for testing purposes
-      System.out.println(((ClassData) classData).getName() + ": " + line);
       // collects execution trace based on the current active thread
       ExecutionTraceCollector.addLineToExecutionTrace((ClassData) classData, line);
       return;
